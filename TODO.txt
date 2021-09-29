@@ -1,15 +1,32 @@
 must have:
+
 - rules
+
 - grid
+
 - populate fields randomly
+
 - show results of guesses
+
 - run a guess count and show at the end
 
 
+
+
 nice to have:
+
 - have player press enter for every new line of text
+
 - compare high scores
 
 
+
+
 todo:
+
 - explain rules a bit better and define different ship types
+
+- create hit list
+- display hits to player
+- use pop() to remove elements from occupied list
+- tell player when he has won

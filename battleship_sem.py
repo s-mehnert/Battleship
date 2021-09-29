@@ -57,5 +57,46 @@ print("Press enter so that I can set up our playing field.")
 input()
 print("Let the battle begin!")
 print(playing_field)
-print("I have hidden my battleships well. If you would like to review the rules, enter '?', otherwise give me your first target.")
+
+playing_field_rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+playing_field_columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+playing_fields = []
+
+for letter in playing_field_rows:
+    for i in range(10):
+        playing_fields.append(letter + playing_field_columns[i])
+
+# define hidden ships
+# 1 carrier: 4 spaces
+# 2 battleships: 3 spaces
+# 3 cruisers: 2 spaces
+# 4 destroyers: 1 space
+
+carrier = ["A1", "A2", "A3", "A4"]
+battleship_1 = ["C5", "D5", "E5"]
+battleship_2 = ["I5", "I6", "I7"]
+cruiser_1 = ["G1", "H1"]
+cruiser_2 = ["D8", "E8"]
+cruiser_3 = ["G4", "G5"]
+destroyer_1 = ["J0"]
+destroyer_2 = ["B7"]
+destroyer_3 = ["H9"]
+destroyer_4 = ["D2"]
+occupied_fields = carrier + battleship_1 + battleship_2 + cruiser_1 + cruiser_2 + cruiser_3 + destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
+     
+print("I have hidden my battleships well. If at any point during the game you would like to review the rules, enter '?', otherwise give me your next target.")
+
+# game itself
+
+target = input().upper()
+if target == "?":
+    print(rules)
+elif target not in playing_fields:
+    print("You are aiming outside the target area. Try again.")
+elif target in occupied_fields:
+    print("hit")
+else:
+    print("miss")
+
+
 
