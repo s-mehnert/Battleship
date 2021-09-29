@@ -1,0 +1,12 @@
+must have:
+- rules
+- grid
+- populate fields randomly
+- show results of guesses
+- run a guess count and show at the end
+
+
+
+nice to have:
+- have player press enter for every new line of text
+- compare high scores
