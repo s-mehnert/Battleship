@@ -18,6 +18,7 @@ nice to have:
 - have player press enter for every new line of text
 
 - compare high scores
+- let player select difficulty level and set how many tries they have accordingly
 
 
 
@@ -30,3 +31,4 @@ todo:
 - display hits to player
 - use pop() to remove elements from occupied list
 - tell player when he has won
+- add code to tell the player that they have sunk a ship

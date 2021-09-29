@@ -6,7 +6,7 @@ print("Who dares to enter the battle? Immediately state your name!")
 player1 = input()
 print("Ok then, " + player1 +", let's begin.")
 
-# Rules
+# Rules (need to be refined)
 rules = "I will hide 10 battleships in total. More on that later."
 print("First things first. Are you familiar with the rules? (y/n)")
 answer_rules = input().lower()
@@ -84,19 +84,57 @@ destroyer_3 = ["H9"]
 destroyer_4 = ["D2"]
 occupied_fields = carrier + battleship_1 + battleship_2 + cruiser_1 + cruiser_2 + cruiser_3 + destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
      
-print("I have hidden my battleships well. If at any point during the game you would like to review the rules, enter '?', otherwise give me your next target.")
+print("I have hidden my ships well. If at any point during the game you would like to review the rules, enter '?', otherwise give me your next target.")
 
-# game itself
+# game itself (set range to 100 later)
 
-target = input().upper()
-if target == "?":
-    print(rules)
-elif target not in playing_fields:
-    print("You are aiming outside the target area. Try again.")
-elif target in occupied_fields:
-    print("hit")
+hit_list = []
+miss_list = []
+total_missiles = 0
+total_hits = 0
+for i in range(50):
+    target = input().upper()
+    if target == "?":
+        print(rules)
+        total_missiles -= 1
+    elif target in hit_list or target in miss_list:
+        print("Haha! You're wasting ammunition. You already hit this target.")
+    elif target not in playing_fields:
+        print("Pathetic! You are way outside the target area. Try again.")
+    elif target in occupied_fields:
+        print("HIT")
+        hit_list.append(target)
+        total_hits += 1
+    else:
+        print("MISS")
+        miss_list.append(target)
+    total_missiles +=1
+    if total_hits < 20:
+        print("You have launched " + str(total_missiles) + " missiles, " + str(100-total_missiles) + " missiles left.")
+        print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
+        print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.")
+    else:
+        break
+if total_hits == 20:
+    print("Congratulations. You won. It took " + str(total_missiles) + " missiles to take all my ships down. Well done!")
 else:
-    print("miss")
+    print("Sorry. You didn't manage to destroy all my ships with the number of missiles at your disposal. You lost.")
+
+# Ask for new round
+
+print("Wanna play another round? (y/n)")
+answer_new_round = input().lower()
+if answer_new_round == "y":
+    print("Ok, " + player1 + ". Here we go.") 
+    # write a function for the game and insert it here   
+elif answer_new_round == "n":
+    print("Good-bye then.")
+else:
+    print("Come again? Please enter y for yes or n for no.")
+
+
+
+
 
 
 
