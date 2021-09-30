@@ -26,10 +26,7 @@ nice to have:
 todo:
 
 - explain rules a bit better 
-- use pop() to remove elements from occupied list
-- add code to tell the player that they have sunk a ship
-- show when a ship has been sunk (input Louisa)
-inp- show the solution playfield if player lost (input Louisa), maybe along with a list of shots (entries)
+- use pop() to remove elements from occupied list ???
 
 done:
 - create hit list
@@ -37,3 +34,6 @@ done:
 - tell player when he has won
 - define different ship types
 - define function for game, so that it can be replayed
+- show the solution playfield if player lost (input Louisa), along with a list of shots (entries)
+- add code to tell the player that they have sunk a ship
+- show when a ship has been sunk (input Louisa)
