@@ -71,19 +71,23 @@ for letter in playing_field_rows:
 # 3 cruisers: 2 spaces
 # 4 destroyers: 1 space
 
+
 carrier = ["A1", "A2", "A3", "A4"]
 battleship_1 = ["C5", "D5", "E5"]
 battleship_2 = ["I5", "I6", "I7"]
+battleships = battleship_1 + battleship_2
 cruiser_1 = ["G1", "H1"]
 cruiser_2 = ["D8", "E8"]
 cruiser_3 = ["G4", "G5"]
+cruisers = cruiser_1 + cruiser_2 + cruiser_3
 destroyer_1 = ["J0"]
 destroyer_2 = ["B7"]
 destroyer_3 = ["H9"]
 destroyer_4 = ["D2"]
-occupied_fields = carrier + battleship_1 + battleship_2 + cruiser_1 + cruiser_2 + cruiser_3 + destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
+destroyers = destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
+occupied_fields = carrier + battleships + cruisers + destroyers
 
-# create function to display solved playing field (doesn't work yet)
+# function to display solved playing field
 
 def display_solution():
     playing_field_solution = playing_field_empty
@@ -116,6 +120,48 @@ def battleship_game():
         else:
             playing_field_progress = playing_field_updated
         return playing_field_progress
+    # create function to detect if a ship has been sunk (start with carrier)
+    def ship_sunk(aim):
+        if aim in occupied_fields:
+            if aim in destroyers:
+                print("*** SHIP SUNK ***")
+                print("You have sunk one of my destroyers.")
+                if all(field in hit_list for field in destroyers):
+                    print("All destroyers down.")
+            elif aim in carrier:
+                if all(field in hit_list for field in carrier):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk my carrier.")
+            elif aim in battleship_1:
+                if all(field in hit_list for field in battleship_1):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my battleships.")
+                    if all(field in hit_list for field in battleships):
+                        print("All battleships down.")
+            elif aim in battleship_2:
+                if all(field in hit_list for field in battleship_2):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my battleships.")
+                    if all(field in hit_list for field in battleships):
+                        print("All battleships down.")
+            elif aim in cruiser_1:
+                if all(field in hit_list for field in cruiser_1):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my cruisers.")
+                    if all(field in hit_list for field in cruisers):
+                        print("All cruisers down.")
+            elif aim in cruiser_2:
+                if all(field in hit_list for field in cruiser_2):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my cruisers.")
+                    if all(field in hit_list for field in cruisers):
+                        print("All cruisers down.")
+            elif aim in cruiser_3:
+                if all(field in hit_list for field in cruiser_3):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my cruisers.")
+                    if all(field in hit_list for field in cruisers):
+                        print("All cruisers down.")            
     for i in range(75):
         target = input().upper()
         outcome = ""
@@ -138,6 +184,7 @@ def battleship_game():
         total_missiles +=1
         playing_field_updated = playing_field_update(target, outcome)
         print("*** " + outcome + " ***")
+        ship_sunk(target)
         print(playing_field_updated)
 
         if total_hits < 20:
@@ -152,6 +199,7 @@ def battleship_game():
         print("Sorry. You didn't manage to destroy all my ships with the number of missiles at your disposal. You lost.")
         print("Here is the solution:")
         print(display_solution())
+        print("You managed to hit " + str(total_hits) + " targets. Here is the complete list: " + str(hit_list))
 
 battleship_game()
 
