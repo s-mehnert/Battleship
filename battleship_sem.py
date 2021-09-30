@@ -93,10 +93,10 @@ def display_solution():
             playing_field_progress = playing_field_solution.replace(" " + field + " ", "OOOO")
         else:
             playing_field_progress = playing_field_solution.replace(" " + field + " ", "~~~~")
-    playing_field_solution = playing_field_progress
+        playing_field_solution = playing_field_progress
     return playing_field_progress
 
-# game itself (set range to 100 later)
+# game itself
 
 def battleship_game():
     print(playing_field_empty)
