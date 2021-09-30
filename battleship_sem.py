@@ -19,7 +19,7 @@ else:
 
 # Setting up playing field
 
-playing_field = """
+playing_field_empty = """
  ____ ____ ____ ____ ____ ____ ____ ____ ____ ____
 |    |    |    |    |    |    |    |    |    |    |
 | A0 | A1 | A2 | A3 | A4 | A5 | A6 | A7 | A8 | A9 |
@@ -56,7 +56,7 @@ playing_field = """
 print("Press enter so that I can set up our playing field.")
 input()
 print("Let the battle begin!")
-print(playing_field)
+print(playing_field_empty)
 
 playing_field_rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 playing_field_columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -85,6 +85,17 @@ destroyer_4 = ["D2"]
 occupied_fields = carrier + battleship_1 + battleship_2 + cruiser_1 + cruiser_2 + cruiser_3 + destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
      
 print("I have hidden my ships well. If at any point during the game you would like to review the rules, enter '?', otherwise give me your next target.")
+# create function to reprint the playing field with hits and misses marked after each shot
+playing_field_updated = playing_field_empty
+def playing_field_update(aim, hit_or_miss):
+    playing_field_progress = """"""
+    if hit_or_miss == "MISS":
+        playing_field_progress = playing_field_updated.replace(" " + aim + " ", "~~~~")
+    elif hit_or_miss == "HIT":
+        playing_field_progress = playing_field_updated.replace(" " + aim + " ", "OOOO")
+    else:
+        playing_field_progress = playing_field_updated
+    return playing_field_progress
 
 # game itself (set range to 100 later)
 
@@ -94,21 +105,28 @@ total_missiles = 0
 total_hits = 0
 for i in range(50):
     target = input().upper()
+    outcome = ""
     if target == "?":
         print(rules)
         total_missiles -= 1
     elif target in hit_list or target in miss_list:
-        print("Haha! You're wasting ammunition. You already hit this target.")
+        outcome = "HAHAHA"
+        print("You're wasting ammunition. You already hit this target.")
     elif target not in playing_fields:
-        print("Pathetic! You are way outside the target area. Try again.")
+        outcome = "PATHETIC"
+        print("You are way outside the target area. Try again.")
     elif target in occupied_fields:
-        print("HIT")
+        outcome = "HIT"
         hit_list.append(target)
         total_hits += 1
     else:
-        print("MISS")
+        outcome = "MISS"
         miss_list.append(target)
     total_missiles +=1
+    playing_field_updated = playing_field_update(target, outcome)
+    print("*** " + outcome + " ***")
+    print(playing_field_updated)
+
     if total_hits < 20:
         print("You have launched " + str(total_missiles) + " missiles, " + str(100-total_missiles) + " missiles left.")
         print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))

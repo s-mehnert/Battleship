@@ -2,13 +2,13 @@ must have:
 
 - rules
 
-- grid
+y - grid
 
 - populate fields randomly
 
-- show results of guesses
+y - show results of guesses
 
-- run a guess count and show at the end
+y - run a guess count and show at the end
 
 
 
@@ -27,8 +27,11 @@ todo:
 
 - explain rules a bit better and define different ship types
 
+- use pop() to remove elements from occupied list
+- add code to tell the player that they have sunk a ship
+- define function for game, so that it can be replayed
+
+done:
 - create hit list
 - display hits to player
-- use pop() to remove elements from occupied list
 - tell player when he has won
-- add code to tell the player that they have sunk a ship
