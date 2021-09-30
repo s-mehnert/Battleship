@@ -29,7 +29,7 @@ todo:
 - use pop() to remove elements from occupied list
 - add code to tell the player that they have sunk a ship
 - show when a ship has been sunk (input Louisa)
-- show the solution playfield if player lost (input Louisa), maybe along with a list of shots (entries)
+inp- show the solution playfield if player lost (input Louisa), maybe along with a list of shots (entries)
 
 done:
 - create hit list

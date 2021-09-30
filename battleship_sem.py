@@ -82,7 +82,20 @@ destroyer_2 = ["B7"]
 destroyer_3 = ["H9"]
 destroyer_4 = ["D2"]
 occupied_fields = carrier + battleship_1 + battleship_2 + cruiser_1 + cruiser_2 + cruiser_3 + destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
-     
+
+# create function to display solved playing field (doesn't work yet)
+
+def display_solution():
+    playing_field_solution = playing_field_empty
+    for field in playing_fields:
+        playing_field_progress = """"""
+        if field in occupied_fields:
+            playing_field_progress = playing_field_solution.replace(" " + field + " ", "OOOO")
+        else:
+            playing_field_progress = playing_field_solution.replace(" " + field + " ", "~~~~")
+    playing_field_solution = playing_field_progress
+    return playing_field_progress
+
 # game itself (set range to 100 later)
 
 def battleship_game():
@@ -92,7 +105,6 @@ def battleship_game():
     miss_list = []
     total_missiles = 0
     total_hits = 0
-    
     # create function to reprint the playing field with hits and misses marked after each shot
     playing_field_updated = playing_field_empty 
     def playing_field_update(aim, hit_or_miss):
@@ -138,6 +150,8 @@ def battleship_game():
         print("Congratulations. You won. It took " + str(total_missiles) + " missiles to take all my ships down. Well done!")
     else:
         print("Sorry. You didn't manage to destroy all my ships with the number of missiles at your disposal. You lost.")
+        print("Here is the solution:")
+        print(display_solution())
 
 battleship_game()
 
