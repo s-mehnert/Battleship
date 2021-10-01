@@ -90,6 +90,46 @@ available_choices = playing_fields
 
 # define place_ship function that takes parameter of how many spaces a ship occupies
 
+def place_ship(num):
+    ship = []
+    for i in range(num):
+        ship.append("")
+    if num < 1 or num > 4:
+            print("Error. A ship needs to occupy at least one and a maximum of 4 playing fields. Set num equal to an integer between 1 and 4.")
+    ship[0] = select_random_field(playing_fields)
+    if num > 1:     
+        index_counter = playing_fields.index(ship[0])
+        dist = select_random_distribution()
+        if dist == "horizontal":
+            if str(num-2) in ship[0] or str(num-3) in ship[0] or str(num-4) in ship[0]:
+                dir = "right"
+            elif str(num+3) in ship[0] or str(num+4) in ship[0] or str(num+5) in ship[0]:
+                dir = "left"
+            else:
+                dir = select_random_left_right()
+            for i in range(num-1):
+                if dir == "right":
+                    index_counter += 1
+                    ship[i+1] = playing_fields[index_counter]
+                else:
+                    index_counter -=1
+                    ship[i+1] = playing_fields[index_counter]
+        else:
+            if index_counter < (num-1)*10:
+                dir = "down"
+            elif index_counter > (len(playing_fields)-1) - (num-1)*10:
+                dir = "up"
+            else:
+                dir = select_random_up_down()
+            for i in range(num-1):
+                if dir == "down":
+                    index_counter += 10
+                    ship[i+1] = playing_fields[index_counter]
+                else:
+                    index_counter -=10
+                    ship[i+1] = playing_fields[index_counter]
+    return ship
+
 def place_carrier():
     carrier = ["","","",""]
     carrier[0] = select_random_field(playing_fields)
@@ -125,7 +165,7 @@ def place_carrier():
                 carrier[i+1] = playing_fields[index_counter]
     return carrier
 
-carrier = place_carrier()
+carrier = place_ship(4)
 battleship_1 = ["C5", "D5", "E5"]
 battleship_2 = ["I5", "I6", "I7"]
 battleships = battleship_1 + battleship_2
@@ -159,6 +199,7 @@ def battleship_game():
     print(playing_field_empty)
     print("I have hidden my ships well. If at any point during the game you would like to review the rules, enter '?', otherwise give me your next target.")
     hit_list = []
+    print(carrier)
     miss_list = []
     total_missiles = 0
     total_hits = 0

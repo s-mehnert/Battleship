@@ -4,7 +4,7 @@ must have:
 
 y - grid
 
-- populate fields randomly
+inp - populate fields randomly
 
 y - show results of guesses
 
