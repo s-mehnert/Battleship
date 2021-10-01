@@ -65,6 +65,8 @@ for letter in playing_field_rows:
     for i in range(10):
         playing_fields.append(letter + playing_field_columns[i])
 
+available_fields = playing_fields
+
 # define hidden ships
 # 1 carrier: 4 spaces
 # 2 battleships: 3 spaces
@@ -86,8 +88,6 @@ def select_random_up_down():
 def select_random_left_right():
     return random.choice(left_right)
 
-available_choices = playing_fields
-
 # define place_ship function that takes parameter of how many spaces a ship occupies
 
 def place_ship(num):
@@ -96,7 +96,7 @@ def place_ship(num):
         ship.append("")
     if num < 1 or num > 4:
             print("Error. A ship needs to occupy at least one and a maximum of 4 playing fields. Set num equal to an integer between 1 and 4.")
-    ship[0] = select_random_field(playing_fields)
+    ship[0] = select_random_field(available_fields)
     if num > 1:     
         index_counter = playing_fields.index(ship[0])
         dist = select_random_distribution()
@@ -130,55 +130,63 @@ def place_ship(num):
                     ship[i+1] = playing_fields[index_counter]
     return ship
 
-def place_carrier():
-    carrier = ["","","",""]
-    carrier[0] = select_random_field(playing_fields)
-    index_counter = playing_fields.index(carrier[0])
-    dist = select_random_distribution()
-    if dist == "horizontal":
-        if "0" in carrier[0] or "1" in carrier[0] or "2" in carrier[0]:
-            dir = "right"
-        if "9" in carrier[0] or "8" in carrier[0] or "7" in carrier[0]:
-            dir = "left"
-        dir = select_random_left_right()
-        if dir == "right":
-            for i in range(3):
-                index_counter += 1
-                carrier[i+1] = playing_fields[index_counter]
-        else:
-            for i in range(3):
-                index_counter -=1
-                carrier[i+1] = playing_fields[index_counter]
-    else:
-        if "A" in carrier[0] or "B" in carrier[0] or "C" in carrier[0]:
-            dir = "down"
-        if "J" in carrier[0] or "I" in carrier[0] or "H" in carrier[0]:
-            dir = "up"
-        dir = select_random_up_down()
-        if dir == "down":
-            for i in range(3):
-                index_counter += 10
-                carrier[i+1] = playing_fields[index_counter]
-        else:
-            for i in range(3):
-                index_counter -=10
-                carrier[i+1] = playing_fields[index_counter]
-    return carrier
+# define function to populate the whole playing field randomly    
 
-carrier = place_ship(4)
-battleship_1 = ["C5", "D5", "E5"]
-battleship_2 = ["I5", "I6", "I7"]
-battleships = battleship_1 + battleship_2
-cruiser_1 = ["G1", "H1"]
-cruiser_2 = ["D8", "E8"]
-cruiser_3 = ["G4", "G5"]
-cruisers = cruiser_1 + cruiser_2 + cruiser_3
-destroyer_1 = ["J0"]
-destroyer_2 = ["B7"]
-destroyer_3 = ["H9"]
-destroyer_4 = ["D2"]
-destroyers = destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
+carrier = []
+battleship_1 = []
+battleship_2 = []
+cruiser_1 = []
+cruiser_2 = []
+cruiser_3 = []
+destroyer_1 = []
+destroyer_2 = []
+destroyer_3 = []
+destroyer_4 = []
+all_ships = [carrier, [battleship_1, battleship_2], [cruiser_1, cruiser_2, cruiser_3], [destroyer_1, destroyer_2, destroyer_3, destroyer_4]]
+battleships = all_ships[1]
+cruisers = all_ships[2]
+destroyers = all_ships[3]
 occupied_fields = carrier + battleships + cruisers + destroyers
+
+def remove_from_available_fields(ship):
+    fields_to_be_removed = []
+    for i in range(len(ship)):
+        fields_to_be_removed.append(available_fields.index(ship[i]))
+        fields_to_be_removed.append(available_fields.index(ship[i])-1)
+        fields_to_be_removed.append(available_fields.index(ship[i])-9)
+        fields_to_be_removed.append(available_fields.index(ship[i])-10)
+        fields_to_be_removed.append(available_fields.index(ship[i])-11)
+        fields_to_be_removed.append(available_fields.index(ship[i])+1)
+        fields_to_be_removed.append(available_fields.index(ship[i])+9)
+        fields_to_be_removed.append(available_fields.index(ship[i])+10)
+        fields_to_be_removed.append(available_fields.index(ship[i])+11)
+    list_without_duplicates = []
+    for field in fields_to_be_removed:
+        if field not in list_without_duplicates:
+            list_without_duplicates.append(field)
+    list_without_duplicates.sort(reverse = True)
+    for item in list_without_duplicates:
+        available_fields.pop(item)
+
+ships_to_be_placed = {
+    "carrier" : [1, 4], 
+    "battleship" : [2, 3],
+    "cruiser" : [3, 2],
+    "destroyer" : [4, 1]
+}
+# create function that iterates over lists extracted from above dictionary to populate the playing field:
+
+def populate_playing_field():
+    occupied_fields = []
+    carrier = place_ship(4)
+    occupied_fields += carrier
+    remove_from_available_fields(carrier)
+    battleship_1 = place_ship(3)
+    occupied_fileds += battleship_1
+    remove_from_available_fields(battleship_1)
+    battleship_2 = place_ship(3)
+
+    return occupied_fields
 
 # function to display solved playing field
 

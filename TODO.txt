@@ -1,6 +1,6 @@
 must have:
 
-- rules
+inp - rules
 
 y - grid
 
@@ -26,7 +26,6 @@ nice to have:
 todo:
 
 - explain rules a bit better 
-- use pop() to remove elements from occupied list ???
 
 done:
 - create hit list
@@ -37,3 +36,4 @@ done:
 - show the solution playfield if player lost (input Louisa), along with a list of shots (entries)
 - add code to tell the player that they have sunk a ship
 - show when a ship has been sunk (input Louisa)
+- use pop() to remove elements from occupied list
