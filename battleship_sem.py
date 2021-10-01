@@ -71,8 +71,61 @@ for letter in playing_field_rows:
 # 3 cruisers: 2 spaces
 # 4 destroyers: 1 space
 
+# create function to randomly populate playing field
 
-carrier = ["A1", "A2", "A3", "A4"]
+import random
+distribution = ["horizontal", "vertical"]
+up_down = ["up", "down"]
+left_right = ["left", "right"]
+def select_random_field(selection):
+    return random.choice(selection)
+def select_random_distribution():
+    return random.choice(distribution)
+def select_random_up_down():
+    return random.choice(up_down)
+def select_random_left_right():
+    return random.choice(left_right)
+
+available_choices = playing_fields
+
+# define place_ship function that takes parameter of how many spaces a ship occupies
+
+def place_carrier():
+    carrier = ["","","",""]
+    carrier[0] = select_random_field(playing_fields)
+    index_counter = playing_fields.index(carrier[0])
+    dist = select_random_distribution()
+    if dist == "horizontal":
+        if "0" in carrier[0] or "1" in carrier[0] or "2" in carrier[0]:
+            dir = "right"
+        if "9" in carrier[0] or "8" in carrier[0] or "7" in carrier[0]:
+            dir = "left"
+        dir = select_random_left_right()
+        if dir == "right":
+            for i in range(3):
+                index_counter += 1
+                carrier[i+1] = playing_fields[index_counter]
+        else:
+            for i in range(3):
+                index_counter -=1
+                carrier[i+1] = playing_fields[index_counter]
+    else:
+        if "A" in carrier[0] or "B" in carrier[0] or "C" in carrier[0]:
+            dir = "down"
+        if "J" in carrier[0] or "I" in carrier[0] or "H" in carrier[0]:
+            dir = "up"
+        dir = select_random_up_down()
+        if dir == "down":
+            for i in range(3):
+                index_counter += 10
+                carrier[i+1] = playing_fields[index_counter]
+        else:
+            for i in range(3):
+                index_counter -=10
+                carrier[i+1] = playing_fields[index_counter]
+    return carrier
+
+carrier = place_carrier()
 battleship_1 = ["C5", "D5", "E5"]
 battleship_2 = ["I5", "I6", "I7"]
 battleships = battleship_1 + battleship_2
