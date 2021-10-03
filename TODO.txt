@@ -37,3 +37,7 @@ done:
 - add code to tell the player that they have sunk a ship
 - show when a ship has been sunk (input Louisa)
 - use pop() to remove elements from occupied list
+
+in progress/next:
+- take care of index out of range error in place_ship function
+- tackle potential fields in other column (or irrelevant?)
