@@ -4,7 +4,7 @@ inp - rules
 
 y - grid
 
-inp - populate fields randomly
+y - populate fields randomly
 
 y - show results of guesses
 
@@ -26,6 +26,8 @@ nice to have:
 todo:
 
 - explain rules a bit better 
+- include empty lines for better visuals
+- create definition for random placement of ships, so that player can have more than one round with different playing field
 
 done:
 - create hit list
@@ -39,5 +41,3 @@ done:
 - use pop() to remove elements from occupied list
 
 in progress/next:
-- take care of index out of range error in place_ship function
-- tackle potential fields in other column (or irrelevant?)

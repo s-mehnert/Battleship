@@ -60,12 +60,13 @@ print("Let the battle begin!")
 playing_field_rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 playing_field_columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 playing_fields = []
-
 for letter in playing_field_rows:
     for i in range(10):
         playing_fields.append(letter + playing_field_columns[i])
-
-available_fields = playing_fields
+available_fields = []
+for letter in playing_field_rows:
+    for i in range(10):
+        available_fields.append(letter + playing_field_columns[i])
 occupied_fields = []
 
 # define hidden ships
@@ -121,80 +122,11 @@ def place_ship(num):
     ship[0] = select_random_field(available_fields)
     if num > 1:     
         index_counter = playing_fields.index(ship[0])
-        horizontal_occupied = False
-        horizontal_occupied_right = False
-        horizontal_occupied_left = False
-        temp_counter = playing_fields.index(ship[0])
-        potential_ship_fields_horizontal_right = []
-        for i in range(num-1):
-            if temp_counter >= 99:
-                continue
-            else:
-                potential_ship_fields_horizontal_right.append(playing_fields[temp_counter+1])
-                temp_counter += 1
-        for potential_field in potential_ship_fields_horizontal_right:
-            if potential_field in occupied_fields:
-                horizontal_occupied_right = True  
-        temp_counter = playing_fields.index(ship[0])
-        potential_ship_fields_horizontal_left = []
-        for i in range(num-1):
-            if temp_counter <= 0:
-                continue
-            else:
-                potential_ship_fields_horizontal_left.append(playing_fields[temp_counter-1])
-                temp_counter -=1
-        for potential_field in potential_ship_fields_horizontal_left:
-            if potential_field in occupied_fields:
-                horizontal_occupied_left = True  
-        potential_ship_fields_horizontal = potential_ship_fields_horizontal_left + potential_ship_fields_horizontal_right
-        for potential_field in potential_ship_fields_horizontal:
-            if potential_field in occupied_fields:
-                horizontal_occupied = True        
-        vertical_occupied = False
-        vertical_occupied_down = False
-        vertical_occupied_up = False
-        temp_counter = playing_fields.index(ship[0])
-        potential_ship_fields_vertical_down = []
-        for i in range(num-1):
-            if temp_counter >= 90:
-                continue
-            else:
-                potential_ship_fields_vertical_down.append(playing_fields[temp_counter+10])
-                temp_counter += 10
-        for potential_field in potential_ship_fields_vertical_down:
-            if potential_field in occupied_fields:
-                vertical_occupied_down = True  
-        temp_counter = playing_fields.index(ship[0])
-        potential_ship_fields_vertical_up = []
-        for i in range(num-1):
-            if temp_counter <= 9:
-                continue
-            else:
-                potential_ship_fields_vertical_up.append(playing_fields[temp_counter-10])
-                temp_counter -=10
-        for potential_field in potential_ship_fields_vertical_up:
-            if potential_field in occupied_fields:
-                vertical_occupied_up = True 
-        potential_ship_fields_vertical = potential_ship_fields_vertical_down + potential_ship_fields_vertical_up
-        for potential_field in potential_ship_fields_vertical:
-            if potential_field in occupied_fields:
-                vertical_occupied = True
-        if horizontal_occupied == True and vertical_occupied == True:
-            ship[0] = select_random_field(available_fields)
-        elif horizontal_occupied == True:
-            dist = "vertical"
-        elif vertical_occupied == True:
-            dist = "horizontal"
-        else:
-            dist = select_random_distribution()
+        dist = select_random_distribution()
         if dist == "horizontal":
             if str(num-2) in ship[0] or str(num-3) in ship[0] or str(num-4) in ship[0]:
                 dir = "right"
-            elif horizontal_occupied_left == True:
-                dir = "right"
             elif str(num+3) in ship[0] or str(num+4) in ship[0] or str(num+5) in ship[0]:
-                dir = "left"
-            elif horizontal_occupied_right == True:
                 dir = "left"
             else:
                 dir = select_random_left_right()
@@ -208,11 +140,7 @@ def place_ship(num):
         else:
             if index_counter < (num-1)*10:
                 dir = "down"
-            elif vertical_occupied_up == True:
-                dir = "down"
             elif index_counter > (len(playing_fields)-1) - (num-1)*10:
-                dir = "up"
-            elif vertical_occupied_down == True:
                 dir = "up"
             else:
                 dir = select_random_up_down()
@@ -228,40 +156,109 @@ def place_ship(num):
 def remove_from_available_fields(ship):
     fields_to_be_removed = []
     for i in range(len(ship)):
-        fields_to_be_removed.append(available_fields.index(ship[i]))
-        fields_to_be_removed.append(available_fields.index(ship[i])-1)
-        fields_to_be_removed.append(available_fields.index(ship[i])-9)
-        fields_to_be_removed.append(available_fields.index(ship[i])-10)
-        fields_to_be_removed.append(available_fields.index(ship[i])-11)
-        fields_to_be_removed.append(available_fields.index(ship[i])+1)
-        fields_to_be_removed.append(available_fields.index(ship[i])+9)
-        fields_to_be_removed.append(available_fields.index(ship[i])+10)
-        fields_to_be_removed.append(available_fields.index(ship[i])+11)
+        if ship[i] == "A0":
+            fields_to_be_removed.append(playing_fields.index(ship[i]))
+            fields_to_be_removed.append(playing_fields.index(ship[i])+1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+11)
+        elif ship[i] == "J9":
+            fields_to_be_removed.append(playing_fields.index(ship[i]))
+            fields_to_be_removed.append(playing_fields.index(ship[i])-1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-11)
+        elif "A" in ship[i]:
+            fields_to_be_removed.append(playing_fields.index(ship[i]))
+            fields_to_be_removed.append(playing_fields.index(ship[i])-1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+9)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+11)
+        elif "J" in ship[i]:
+            fields_to_be_removed.append(playing_fields.index(ship[i]))
+            fields_to_be_removed.append(playing_fields.index(ship[i])-1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-9)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-11)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+1)
+        elif "0" in ship[i]:
+            fields_to_be_removed.append(playing_fields.index(ship[i]))
+            fields_to_be_removed.append(playing_fields.index(ship[i])-9)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+11)
+        elif "9" in ship[i]:
+            fields_to_be_removed.append(playing_fields.index(ship[i]))
+            fields_to_be_removed.append(playing_fields.index(ship[i])-1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-11)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+9)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+10)
+        else:
+            fields_to_be_removed.append(playing_fields.index(ship[i]))
+            fields_to_be_removed.append(playing_fields.index(ship[i])-1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-9)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])-11)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+1)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+9)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+10)
+            fields_to_be_removed.append(playing_fields.index(ship[i])+11)
     list_without_duplicates = []
     for field in fields_to_be_removed:
         if field not in list_without_duplicates:
             list_without_duplicates.append(field)
     list_without_duplicates.sort(reverse = True)
-    for item in list_without_duplicates:
+    real_content_list = []
+    for index in list_without_duplicates:
+        real_content_list.append(playing_fields[index])
+    real_content_list_filtered = []
+    for element in real_content_list:
+        if element in available_fields:
+            real_content_list_filtered.append(element)
+    index_in_available_fields_list = []
+    for elem in real_content_list_filtered:
+        index_in_available_fields_list.append(available_fields.index(elem))
+    for item in index_in_available_fields_list:
         available_fields.pop(item)
+
+# define function to test if ship occupies already occupied fields
+
+def test_if_occupied(ship):
+    occupied = False
+    for field in ship:
+        if field not in available_fields:
+            occupied = True
+    return occupied
+
 # populate playing field randomly    
 
 carrier = place_ship(4)
 occupied_fields += carrier
 remove_from_available_fields(carrier)
 battleship_1 = place_ship(3)
+while test_if_occupied(battleship_1) == True:
+    battleship_1 = place_ship(3)
 occupied_fields += battleship_1
 remove_from_available_fields(battleship_1)
 battleship_2 = place_ship(3)
+while test_if_occupied(battleship_2) == True:
+    battleship_2 = place_ship(3)
 occupied_fields += battleship_2
 remove_from_available_fields(battleship_2)
 cruiser_1 = place_ship(2)
+while test_if_occupied(cruiser_1) == True:
+    cruiser_1 = place_ship(2)
 occupied_fields += cruiser_1
 remove_from_available_fields(cruiser_1)
 cruiser_2 = place_ship(2)
+while test_if_occupied(cruiser_2) == True:
+    cruiser_2 = place_ship(2)
 occupied_fields += cruiser_2
 remove_from_available_fields(cruiser_2)
 cruiser_3 = place_ship(2)
+while test_if_occupied(cruiser_3) == True:
+    cruiser_3 = place_ship(2)
 occupied_fields += cruiser_3
 remove_from_available_fields(cruiser_3)
 destroyer_1 = place_ship(1)
@@ -296,7 +293,6 @@ def battleship_game():
     print(playing_field_empty)
     print("I have hidden my ships well. If at any point during the game you would like to review the rules, enter '?', otherwise give me your next target.")
     hit_list = []
-    print(carrier)
     miss_list = []
     total_missiles = 0
     total_hits = 0
