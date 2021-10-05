@@ -27,7 +27,6 @@ todo:
 
 - explain rules a bit better 
 - include empty lines for better visuals
-- create definition for random placement of ships, so that player can have more than one round with different playing field
 
 done:
 - create hit list
@@ -39,5 +38,6 @@ done:
 - add code to tell the player that they have sunk a ship
 - show when a ship has been sunk (input Louisa)
 - use pop() to remove elements from occupied list
+- include random placement of ships in game definition, so that player can have more than one round with different playing field
 
 in progress/next:
