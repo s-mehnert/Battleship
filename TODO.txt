@@ -1,6 +1,6 @@
 must have:
 
-inp - rules
+y - rules
 
 y - grid
 
@@ -15,19 +15,14 @@ y - run a guess count and show at the end
 
 nice to have:
 
-- have player press enter for every new line of text (really?)
-- compare high scores
-- let player select difficulty level and set how many tries they have accordingly
-- mark neighboring fields as water fields once ship has been sunk (could be tied to difficulty level
+n - have player press enter for every new line of text (really?)
 
-
-
+maybe later - compare high scores
+maybe later - let player select difficulty level and set how many tries they have accordingly
+maybe later - mark neighboring fields as water fields once ship has been sunk (could be tied to difficulty level
 
 
 todo:
-
-- ask for name again if string empty
-- ask for new input if not y or n
 
 done:
 - create hit list
@@ -44,5 +39,5 @@ done:
 - explain rules a bit better 
 - improve grammar (e.g. 1 missiles)
 - have player name appear more often
-
-in progress/next:
+- ask for name again if string empty
+- ask for new input if not y or n

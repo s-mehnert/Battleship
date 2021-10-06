@@ -1,4 +1,5 @@
 # Intro
+
 welcome_msg = "Welcome to the Ultimate Battleship Experience\n(Press ENTER to start)"
 print()
 print(welcome_msg)
@@ -6,7 +7,11 @@ input()
 print("Who dares to enter the battle? Immediately state your name!")
 player1 = input()
 print()
-print("Ok then, " + player1 +", let's begin.")
+while player1 == "":
+    print("I didn't get that. Please, state your name.")
+    player1 = input()
+else:
+    print("Ok then, " + player1 +", let's begin.")
 print()
 
 # Rules (need to be refined)
@@ -22,15 +27,18 @@ Else, I WIN.
 
 print("First things first. Are you familiar with the rules, " + player1 + "? (y/n)")
 answer_rules = input().lower()
-if answer_rules == "y":
+while answer_rules != "y" and answer_rules != "n":
     print()
-    print("Looks like we are good to go.")    
-    print()
-elif answer_rules == "n":
-    print(rules)
-else:
     print("Come again? Please enter y for yes or n for no.")
-
+    answer_rules = input().lower()
+else:
+    if answer_rules == "y":
+        print()
+        print("Looks like we are good to go.")    
+        print()
+    else:
+        print(rules)
+    
 # Setting up playing field
 
 playing_field_empty = """
@@ -90,9 +98,6 @@ def select_random_left_right():
     return random.choice(left_right)
 
 # game itself
-
-win_count_player = 0
-win_count_program = 0
 
 def battleship_game():
     print("Press ENTER so that I can set up our playing field.")
@@ -502,7 +507,7 @@ def battleship_game():
         print("Here is the solution:")
         print(display_solution())
         print("You managed to hit " + str(total_hits) + " targets. Here is the complete list: " + str(hit_list))
-    
+
 battleship_game()
 
 def play_again():
@@ -517,7 +522,7 @@ def play_again():
         answer = input().lower()
     else:
         if answer == "n":
-            print("Good-bye then.")  
+            print("It was nice playing with you, " + player1 + "! Good-bye then.")  
         else:
            print("Come again? Please enter y for yes or n for no.")
 
