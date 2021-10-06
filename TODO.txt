@@ -26,10 +26,8 @@ nice to have:
 
 todo:
 
-- improve grammar (e.g. 1 missiles)
 - ask for name again if string empty
 - ask for new input if not y or n
-- have player name appear more often
 
 done:
 - create hit list
@@ -44,5 +42,7 @@ done:
 - include random placement of ships in game definition, so that player can have more than one round with different playing field
 - include empty lines for better visuals
 - explain rules a bit better 
+- improve grammar (e.g. 1 missiles)
+- have player name appear more often
 
 in progress/next:
