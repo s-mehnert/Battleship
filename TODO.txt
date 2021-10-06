@@ -15,10 +15,11 @@ y - run a guess count and show at the end
 
 nice to have:
 
-- have player press enter for every new line of text
-
+- have player press enter for every new line of text (really?)
 - compare high scores
 - let player select difficulty level and set how many tries they have accordingly
+- mark neighboring fields as water fields once ship has been sunk (could be tied to difficulty level
+
 
 
 
@@ -26,7 +27,10 @@ nice to have:
 todo:
 
 - explain rules a bit better 
-- include empty lines for better visuals
+- improve grammar (e.g. 1 missiles)
+- ask for name again if string empty
+- ask for new input if not y or n
+- have player name appear more often
 
 done:
 - create hit list
@@ -39,5 +43,6 @@ done:
 - show when a ship has been sunk (input Louisa)
 - use pop() to remove elements from occupied list
 - include random placement of ships in game definition, so that player can have more than one round with different playing field
+- include empty lines for better visuals
 
 in progress/next:

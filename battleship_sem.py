@@ -1,15 +1,20 @@
 # Intro
 
-welcome_msg = "Welcome to the Ultimate Battleship Experience"
+welcome_msg = "Welcome to the Ultimate Battleship Experience\n(Press ENTER to start)"
+print()
 print(welcome_msg)
+input()
 print("Who dares to enter the battle? Immediately state your name!")
 player1 = input()
+print()
 print("Ok then, " + player1 +", let's begin.")
+print()
 
 # Rules (need to be refined)
 rules = "I will hide 10 battleships in total. More on that later."
 print("First things first. Are you familiar with the rules? (y/n)")
 answer_rules = input().lower()
+print()
 if answer_rules == "y":
     print("Looks like we are good to go.")    
 elif answer_rules == "n":
@@ -93,7 +98,7 @@ win_count_player = 0
 win_count_program = 0
 
 def battleship_game():
-    print("Press enter so that I can set up our playing field.")
+    print("Press ENTER so that I can set up our playing field.")
     input()
     print("Let the battle begin!")
     print(playing_field_empty)
@@ -113,10 +118,6 @@ def battleship_game():
     destroyer_2 = []
     destroyer_3 = []
     destroyer_4 = []
-    all_ships = [[carrier], [battleship_1, battleship_2], [cruiser_1, cruiser_2, cruiser_3], [destroyer_1, destroyer_2, destroyer_3, destroyer_4]]
-    battleships = all_ships[1]
-    cruisers = all_ships[2]
-    destroyers = all_ships[3]
     
     # function that takes parameter of how many spaces a ship occupies
 
@@ -281,6 +282,11 @@ def battleship_game():
     occupied_fields += destroyer_4
     remove_from_available_fields(destroyer_4)
 
+    all_ships = [[carrier], [battleship_1, battleship_2], [cruiser_1, cruiser_2, cruiser_3], [destroyer_1, destroyer_2, destroyer_3, destroyer_4]]
+    battleships = battleship_1 + battleship_2
+    cruisers = cruiser_1 + cruiser_2 + cruiser_3
+    destroyers = destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
+
 # function to display solved playing field
 
     def display_solution():
@@ -294,8 +300,7 @@ def battleship_game():
             playing_field_solution = playing_field_progress
         return playing_field_progress
 
-    print("I have hidden my ships well. If at any point during the game you would like to review the rules, enter '?', otherwise give me your next target.")
-    print(occupied_fields)
+    print("I have hidden my ships well.\nIf at any point during the game you would like to review the rules, enter '?',\notherwise give me your first target.")
     hit_list = []
     miss_list = []
     total_missiles = 0
@@ -315,7 +320,7 @@ def battleship_game():
         return playing_field_progress
     
     # create function to detect if a ship has been sunk (start with carrier)
-    
+
     def ship_sunk(aim):
         if aim in occupied_fields:
             if aim in destroyers:
@@ -360,15 +365,16 @@ def battleship_game():
     for i in range(75):
         target = input().upper()
         outcome = ""
+        message = ""
         if target == "?":
             print(rules)
             total_missiles -= 1
         elif target in hit_list or target in miss_list:
-            outcome = "HAHAHA"
-            print("You're wasting ammunition. You already hit this target.")
+            outcome = "I CAN'T BELIEVE IT"
+            message = "You're wasting ammunition. You already hit this target."
         elif target not in playing_fields:
             outcome = "PATHETIC"
-            print("You are way outside the target area. Try again.")
+            message = "You are way outside the target area. Try again."
         elif target in occupied_fields:
             outcome = "HIT"
             hit_list.append(target)
@@ -378,20 +384,30 @@ def battleship_game():
             miss_list.append(target)
         total_missiles +=1
         playing_field_updated = playing_field_update(target, outcome)
-        print("*** " + outcome + " ***")
-        ship_sunk(target)
+        print()
+        if outcome == "HIT":
+            print("*** " + outcome + " ***")
+            ship_sunk(target)
+        else:
+            print("*** " + outcome + " ***")
+            print(message)
         print(playing_field_updated)
 
         if total_hits < 20:
             print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
             print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
             print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.")
+            print()
+            if total_missiles == 75:
+                continue
+            else:
+                print("Give me your next target.")
         else:
             break
     if total_hits == 20:
-        print("Congratulations. You won. It took " + str(total_missiles) + " missiles to take all my ships down. Well done!")
+        print("*****   YOU WON   *****\n\nCongratulations! It took " + str(total_missiles) + " missiles to take all my ships down. Well done!")
     else:
-        print("Sorry. You didn't manage to destroy all my ships with the number of missiles at your disposal. You lost.")
+        print("*****   YOU LOST   *****\n\nSorry. You didn't manage to destroy all my ships with the number of missiles at your disposal.")
         print("Here is the solution:")
         print(display_solution())
         print("You managed to hit " + str(total_hits) + " targets. Here is the complete list: " + str(hit_list))
@@ -399,11 +415,13 @@ def battleship_game():
 battleship_game()
 
 def play_again():
+    print()
     print("Wanna play another round? (y/n)")
     answer = input().lower()
     while answer == "y":
         print("Ok, " + player1 + ". Here we go.")
         battleship_game()
+        print()
         print("Wanna play another round? (y/n)")
         answer = input().lower()
     else:
