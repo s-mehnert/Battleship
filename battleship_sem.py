@@ -11,11 +11,20 @@ print("Ok then, " + player1 +", let's begin.")
 print()
 
 # Rules (need to be refined)
-rules = "I will hide 10 battleships in total. More on that later."
+rules = """ 
+I will hide 10 ships. Together they occupy a total of 20 fields.
+The ships can be distributed horizontally or vertically, but not diagonally.
+None of the ships touches another (not even diagonally).
+The ships contain 1 carrier (4 fields), 2 battleships (3 fields), 3 carriers (2 fields) and 4 destroyers (1 field).
+I will let you know, once you have sunk a particular ship.
+You will have 75 missiles in total. If you manage to sink all my ships, YOU WIN.
+Else, I WIN.
+"""
+
 print("First things first. Are you familiar with the rules? (y/n)")
 answer_rules = input().lower()
-print()
 if answer_rules == "y":
+    print()
     print("Looks like we are good to go.")    
 elif answer_rules == "n":
     print(rules)
@@ -367,7 +376,8 @@ def battleship_game():
         outcome = ""
         message = ""
         if target == "?":
-            print(rules)
+            outcome = "RULES"
+            message = rules
             total_missiles -= 1
         elif target in hit_list or target in miss_list:
             outcome = "I CAN'T BELIEVE IT"
