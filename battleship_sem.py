@@ -521,9 +521,6 @@ def play_again():
         print("Wanna play another round? (y/n)")
         answer = input().lower()
     else:
-        if answer == "n":
-            print("It was nice playing with you, " + player1 + "! Good-bye then.")  
-        else:
-           print("Come again? Please enter y for yes or n for no.")
-
+        print("It was nice playing with you, " + player1 + "! CU next time.")  
+        
 play_again()
