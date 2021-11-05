@@ -1,3 +1,23 @@
+
+
+T T T T T  H       H  E E E E E     U       U  L         T T T T T    I     M       M      A      T T T T T  E E E E E
+    T      H       H  E             U       U  L             T        I     M M   M M    A   A        T      E
+    T      H       H  E             U       U  L             T        I     M   M   M  A       A      T      E
+    T      H H H H H  E E E         U       U  L             T        I     M       M  A A A A A      T      E E E
+    T      H       H  E             U       U  L             T        I     M       M  A       A      T      E
+    T      H       H  E             U       U  L             T        I     M       M  A       A      T      E
+    T      H       H  E E E E E       U U U    L L L L L     T        I     M       M  A       A      T      E E E E E
+
+
+        B B B B        A      T T T T T  T T T T T  L          E E E E E    S S S S  H       H    I    P P P P
+        B       B    A   A        T          T      L          E          S          H       H    I    P       P
+        B       B  A       A      T          T      L          E          S          H       H    I    P       P
+        B B B B    A A A A A      T          T      L          E E E        S S S    H H H H H    I    P P P P
+        B       B  A       A      T          T      L          E                  S  H       H    I    P
+        B       B  A       A      T          T      L          E                  S  H       H    I    P
+        B B B B    A       A      T          T      L L L L L  E E E E E  S S S S    H       H    I    P
+
+
 The Ultimate Battleship Experience
 
 --- Battleship Terminal Game (1 player mode) ---
