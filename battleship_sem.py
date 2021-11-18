@@ -97,6 +97,15 @@ def select_random_up_down():
 def select_random_left_right():
     return random.choice(left_right)
 
+# Ship class
+class Ship:
+    def __init__(self, num_fields, name):
+        self.num_fields = num_fields
+        self.name = name
+    
+    def build(self):
+        pass
+
 # game itself
 
 def battleship_game():
