@@ -35,6 +35,7 @@ How to play:
 This is a terminal game, meaning you run it in the terminal of your choice (e.g. Bash), provided you have Python installed.
 To play you follow the text instructions inside the game and use the keyboard for your input.
 The game has been created using Python 3.9.7
+For the convenience of users who would like to play the game without installing Python an .exe file was created and provided for download.
 
 About:
 This is the final project for the "Learn Python 3" course on codecademy.com, created by Peafly_78.
