@@ -38,49 +38,53 @@ else:
         print()
     else:
         print(rules)
-    
+        
+# Playing field class
+
+class Playfield:
+    def __init__(self):
+        self.empty = """
+         ____ ____ ____ ____ ____ ____ ____ ____ ____ ____
+        |    |    |    |    |    |    |    |    |    |    |
+        | A0 | A1 | A2 | A3 | A4 | A5 | A6 | A7 | A8 | A9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | B0 | B1 | B2 | B3 | B4 | B5 | B6 | B7 | B8 | B9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | C0 | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | D0 | D1 | D2 | D3 | D4 | D5 | D6 | D7 | D8 | D9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | E0 | E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | E9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | F0 | F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8 | F9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | G0 | G1 | G2 | G3 | G4 | G5 | G6 | G7 | G8 | G9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | H0 | H1 | H2 | H3 | H4 | H5 | H6 | H7 | H8 | H9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | I0 | I1 | I2 | I3 | I4 | I5 | I6 | I7 | I8 | I9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        |    |    |    |    |    |    |    |    |    |    |
+        | J0 | J1 | J2 | J3 | J4 | J5 | J6 | J7 | J8 | J9 |
+        |____|____|____|____|____|____|____|____|____|____|
+        """
+
+        self.rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+        self.columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        self.fields = [letter + self.columns[i] for i in range(10) for letter in self.rows]
+        
 # Setting up playing field
 
-playing_field_empty = """
- ____ ____ ____ ____ ____ ____ ____ ____ ____ ____
-|    |    |    |    |    |    |    |    |    |    |
-| A0 | A1 | A2 | A3 | A4 | A5 | A6 | A7 | A8 | A9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| B0 | B1 | B2 | B3 | B4 | B5 | B6 | B7 | B8 | B9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| C0 | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| D0 | D1 | D2 | D3 | D4 | D5 | D6 | D7 | D8 | D9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| E0 | E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | E9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| F0 | F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8 | F9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| G0 | G1 | G2 | G3 | G4 | G5 | G6 | G7 | G8 | G9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| H0 | H1 | H2 | H3 | H4 | H5 | H6 | H7 | H8 | H9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| I0 | I1 | I2 | I3 | I4 | I5 | I6 | I7 | I8 | I9 |
-|____|____|____|____|____|____|____|____|____|____|
-|    |    |    |    |    |    |    |    |    |    |
-| J0 | J1 | J2 | J3 | J4 | J5 | J6 | J7 | J8 | J9 |
-|____|____|____|____|____|____|____|____|____|____|
-"""
-
-playing_field_rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
-playing_field_columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-playing_fields = []
-for letter in playing_field_rows:
-    for i in range(10):
-        playing_fields.append(letter + playing_field_columns[i])
+playing_field = Playfield()
+playing_fields = playing_field.fields
 
 # create functions to randomly populate playing field
 
@@ -99,11 +103,27 @@ def select_random_left_right():
 
 # Ship class
 class Ship:
-    def __init__(self, num_fields, name):
+    # create an instance of a ship in the form of a list containing the pre-defined number of fields
+    def __init__(self, num_fields):
         self.num_fields = num_fields
-        self.name = name
+        self.fields = []
+        for i in range(num_fields):
+            self.fields.append("")
     
-    def build(self):
+    # place the ship on the playing field
+    def place(self):
+        pass
+    
+    # remove the ship from the list of available fields
+    def remove(self):
+        pass
+
+    # check if the fields selected for the ship are already occupied
+    def occupied(self):
+        pass
+
+    # check if the ship has been sunk
+    def sunk(self):
         pass
 
 # game itself
@@ -112,32 +132,25 @@ def battleship_game():
     print("Press ENTER so that I can set up our playing field.")
     input()
     print("Let the battle begin!")
-    print(playing_field_empty)
-    available_fields = []
-    for letter in playing_field_rows:
-        for i in range(10):
-            available_fields.append(letter + playing_field_columns[i])
+    print(playing_field.empty)
+    available_fields = playing_fields.copy()
     occupied_fields = []
 
-    carrier = []
-    battleship_1 = []
-    battleship_2 = []
-    cruiser_1 = []
-    cruiser_2 = []
-    cruiser_3 = []
-    destroyer_1 = []
-    destroyer_2 = []
-    destroyer_3 = []
-    destroyer_4 = []
+    carrier = Ship(4).fields
+    battleship_1 = Ship(3).fields
+    battleship_2 = Ship(3).fields
+    cruiser_1 = Ship(2).fields
+    cruiser_2 = Ship(2).fields
+    cruiser_3 = Ship(2).fields
+    destroyer_1 = Ship(1).fields
+    destroyer_2 = Ship(1).fields
+    destroyer_3 = Ship(1).fields
+    destroyer_4 = Ship(1).fields
     
     # function that takes parameter of how many spaces a ship occupies
 
     def place_ship(num):
-        ship = []
-        for i in range(num):
-            ship.append("")
-        if num < 1 or num > 4:
-            print("Error. A ship needs to occupy at least one and a maximum of 4 playing fields. Set num equal to an integer between 1 and 4.")
+        ship = Ship(num).fields
         ship[0] = select_random_field(available_fields)
         if num > 1:     
             index_counter = playing_fields.index(ship[0])
@@ -301,7 +314,7 @@ def battleship_game():
 # function to display solved playing field
 
     def display_solution():
-        playing_field_solution = playing_field_empty
+        playing_field_solution = playing_field.empty
         for field in playing_fields:
             playing_field_progress = """"""
             if field in occupied_fields:
@@ -319,7 +332,7 @@ def battleship_game():
 
     # create function to reprint the playing field with hits and misses marked after each shot
     
-    playing_field_updated = playing_field_empty 
+    playing_field_updated = playing_field.empty 
     def playing_field_update(aim, hit_or_miss):
         playing_field_progress = """"""
         if hit_or_miss == "MISS":
