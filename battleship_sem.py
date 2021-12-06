@@ -1,44 +1,18 @@
-# Intro
+# create functions to randomly populate playing field
 
-welcome_msg = "Welcome to the Ultimate Battleship Experience\n(Press ENTER to start)"
-print()
-print(welcome_msg)
-input()
-print("Who dares to enter the battle? Immediately state your name!")
-player1 = input()
-print()
-while player1 == "":
-    print("I didn't get that. Please, state your name.")
-    player1 = input()
-else:
-    print("Ok then, " + player1 +", let's begin.")
-print()
+import random
+distribution = ["horizontal", "vertical"]
+up_down = ["up", "down"]
+left_right = ["left", "right"]
+def select_random_field(selection):
+    return random.choice(selection)
+def select_random_distribution():
+    return random.choice(distribution)
+def select_random_up_down():
+    return random.choice(up_down)
+def select_random_left_right():
+    return random.choice(left_right)
 
-# Rules (need to be refined)
-rules = """ 
-I will hide 10 ships. Together they occupy a total of 20 fields.
-The ships can be distributed horizontally or vertically, but not diagonally.
-None of the ships touches another (not even diagonally).
-The ships contain 1 carrier (4 fields), 2 battleships (3 fields), 3 carriers (2 fields) and 4 destroyers (1 field).
-I will let you know, once you have sunk a particular ship.
-You will have 75 missiles in total. If you manage to sink all my ships, YOU WIN.
-Else, I WIN.
-"""
-
-print("First things first. Are you familiar with the rules, " + player1 + "? (y/n)")
-answer_rules = input().lower()
-while answer_rules != "y" and answer_rules != "n":
-    print()
-    print("Come again? Please enter y for yes or n for no.")
-    answer_rules = input().lower()
-else:
-    if answer_rules == "y":
-        print()
-        print("Looks like we are good to go.")    
-        print()
-    else:
-        print(rules)
-        
 # Playing field class
 
 class Playfield:
@@ -79,315 +53,206 @@ class Playfield:
 
         self.rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         self.columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        self.fields = [letter + self.columns[i] for i in range(10) for letter in self.rows]
-        
-# Setting up playing field
+        self.fields = [self.rows[i] + column for i in range(10) for column in self.columns]
+
+    # bug: doesn't update available fields properly when calling ship.remove()
+    
+    def populate(self, ship_list):
+        available_fields = self.fields.copy()
+        occupied_fields = []
+        for ship in ship_list:
+            while ship.is_occupied(available_fields):
+                ship.place(self.fields)
+            occupied_fields += ship.fields
+            print(occupied_fields)
+            ship.remove(available_fields)
+            print(available_fields)
+            print(len(available_fields))
+        return occupied_fields, ship_list
+    
+    def update(self, hit_list, miss_list):
+        update = self.empty
+        for field in hit_list:
+            update = update.replace(" " + field + " ", "OOOO")
+        for field in miss_list:
+            update = update.replace(" " + field + " ", "~~~~")
+        return update
+
+    def solution(self, occupied_fields):
+        solution = self.empty
+        for field in self.fields:
+            if field in occupied_fields:
+                solution = solution.replace(" " + field + " ", "OOOO")
+            else:
+                solution = solution.replace(" " + field + " ", "~~~~")
+        return solution
+
+
+# Ship class
+class Ship:
+    
+    # create an instance of a ship in the form of a list containing the pre-defined number of fields
+    def __init__(self, size):
+        self.size = size
+        self.fields = []
+        for i in range(size):
+            self.fields.append("")
+    
+    # place the ship on the playing field randomly
+    def place(self, playing_fields):
+        self.playing_fields = playing_fields
+        self.fields[0] = select_random_field(playing_fields)
+        if self.size > 1:     
+            index_counter = playing_fields.index(self.fields[0])
+            dist = select_random_distribution()
+            if dist == "horizontal":
+                if str(self.size-2) in self.fields[0] or str(self.size-3) in self.fields[0] or str(self.size-4) in self.fields[0]:
+                    dir = "right"
+                elif str(self.size+3) in self.fields[0] or str(self.size+4) in self.fields[0] or str(self.size+5) in self.fields[0]:
+                    dir = "left"
+                else:
+                    dir = select_random_left_right()
+                for i in range(self.size-1):
+                    if dir == "right":
+                        index_counter += 1
+                        self.fields[i+1] = playing_fields[index_counter]
+                    else:
+                        index_counter -=1
+                        self.fields[i+1] = playing_fields[index_counter]
+            else:
+                if index_counter < (self.size-1)*10:
+                    dir = "down"
+                elif index_counter > (len(playing_fields)-1) - (self.size-1)*10:
+                    dir = "up"
+                else:
+                    dir = select_random_up_down()
+                for i in range(self.size-1):
+                    if dir == "down":
+                        index_counter += 10
+                        self.fields[i+1] = playing_fields[index_counter]
+                    else:
+                        index_counter -=10
+                        self.fields[i+1] = playing_fields[index_counter]
+        return self.fields
+    
+    # remove the ship from the list of available fields
+
+    # bug: doesn't remove all the fields it should
+
+    def remove(self, from_fields):
+        fields_to_be_removed = []
+        available_fields = Playfield().fields
+        for i in range(self.size):
+            idx = available_fields.index(self.fields[i])
+            if self.fields[i] == "A0":
+                fields_to_be_removed += [available_fields[idx], available_fields[idx+1], available_fields[idx+10], available_fields[idx+11]]
+            elif self.fields[i] == "J9":
+                fields_to_be_removed += [available_fields[idx], available_fields[idx-1], available_fields[idx-10], available_fields[idx-11]]
+            elif "A" in self.fields[i]:
+                fields_to_be_removed += [available_fields[idx], available_fields[idx-1], available_fields[idx+1], available_fields[idx+9], available_fields[idx+10], available_fields[idx+11]]
+            elif "J" in self.fields[i]:
+                fields_to_be_removed += [available_fields[idx], available_fields[idx-1], available_fields[idx-9], available_fields[idx-10], available_fields[idx-11], available_fields[idx+1]]
+            elif "0" in self.fields[i]:
+                fields_to_be_removed += [available_fields[idx], available_fields[idx-9], available_fields[idx-10], available_fields[idx+1], available_fields[idx+10], available_fields[idx+11]]
+            elif "9" in self.fields[i]:
+                fields_to_be_removed += [available_fields[idx], available_fields[idx-1], available_fields[idx-10], available_fields[idx-11], available_fields[idx+9], available_fields[idx+10]]
+            else:
+                fields_to_be_removed += [available_fields[idx], available_fields[idx-1], available_fields[idx-9], available_fields[idx-10], available_fields[idx-11], available_fields[idx+1], available_fields[idx+9], available_fields[idx+10], available_fields[idx+11]]
+        for field in fields_to_be_removed:
+            if field in from_fields:
+                from_fields.pop(from_fields.index(field))
+        print(from_fields)
+        print(len(from_fields))
+        return from_fields
+
+    # check if the fields selected for the ship are already occupied
+    def is_occupied(self, available_fields):
+        for field in self.fields:
+            return field not in available_fields
+
+    # check if the ship has been sunk
+    def is_sunk(self, hit_list):
+        return all(field in hit_list for field in self.fields)
+
+# Setting up playing field and other global parameters
 
 playing_field = Playfield()
 playing_fields = playing_field.fields
 
-# create functions to randomly populate playing field
+carrier = Ship(4)
+battleship_1 = Ship(3)
+battleship_2 = Ship(3)
+cruiser_1 = Ship(2)
+cruiser_2 = Ship(2)
+cruiser_3 = Ship(2)
+destroyer_1 = Ship(1)
+destroyer_2 = Ship(1)
+destroyer_3 = Ship(1)
+destroyer_4 = Ship(1)
 
-import random
-distribution = ["horizontal", "vertical"]
-up_down = ["up", "down"]
-left_right = ["left", "right"]
-def select_random_field(selection):
-    return random.choice(selection)
-def select_random_distribution():
-    return random.choice(distribution)
-def select_random_up_down():
-    return random.choice(up_down)
-def select_random_left_right():
-    return random.choice(left_right)
+empty_fleet = [carrier, battleship_1, battleship_2, cruiser_1, cruiser_2, cruiser_3, destroyer_1, destroyer_2, destroyer_3, destroyer_4]
 
-# Ship class
-class Ship:
-    # create an instance of a ship in the form of a list containing the pre-defined number of fields
-    def __init__(self, num_fields):
-        self.num_fields = num_fields
-        self.fields = []
-        for i in range(num_fields):
-            self.fields.append("")
-    
-    # place the ship on the playing field
-    def place(self):
-        pass
-    
-    # remove the ship from the list of available fields
-    def remove(self):
-        pass
+# Intro
 
-    # check if the fields selected for the ship are already occupied
-    def occupied(self):
-        pass
+welcome_msg = "\nWelcome to the Ultimate Battleship Experience\n"
 
-    # check if the ship has been sunk
-    def sunk(self):
-        pass
+print(welcome_msg)
+input("Press ENTER to start")
+player1 = input("\nWho dares to enter the battle? Immediately state your name!\n> ")
+while player1 == "":
+    player1 = input("\nI didn't get that. Please, state your name.\n> ")
+else:
+    print(f"\nOk then, {player1}, let's begin.\n")
 
-# game itself
+rules = """ 
+I will hide 10 ships. Together they occupy a total of 20 fields.
+The ships can be distributed horizontally or vertically, but not diagonally.
+None of the ships touches another (not even diagonally).
+The ships contain 1 carrier (4 fields), 2 battleships (3 fields), 3 carriers (2 fields) and 4 destroyers (1 field).
+I will let you know, once you have sunk a particular ship.
+You will have 75 missiles in total. If you manage to sink all my ships, YOU WIN.
+Else, I WIN.
+"""
+
+answer_rules = input(f"\nFirst things first. Are you familiar with the rules, {player1}? (y/n)\n> ").lower()
+while answer_rules != "y" and answer_rules != "n":
+    answer_rules = input("\nCome again? Please enter y for yes or n for no.\n> ").lower()
+else:
+    if answer_rules == "y":
+        print("\nLooks like we are good to go.\n")    
+    else:
+        print(rules)
+        
+# Game
 
 def battleship_game():
-    print("Press ENTER so that I can set up our playing field.")
-    input()
-    print("Let the battle begin!")
+    input("\nPress ENTER so that I can set up our playing field.")
+    print("\nLet the battle begin!\n")
     print(playing_field.empty)
-    available_fields = playing_fields.copy()
-    occupied_fields = []
 
-    carrier = Ship(4).fields
-    battleship_1 = Ship(3).fields
-    battleship_2 = Ship(3).fields
-    cruiser_1 = Ship(2).fields
-    cruiser_2 = Ship(2).fields
-    cruiser_3 = Ship(2).fields
-    destroyer_1 = Ship(1).fields
-    destroyer_2 = Ship(1).fields
-    destroyer_3 = Ship(1).fields
-    destroyer_4 = Ship(1).fields
+    occupied_fields, fleet = playing_field.populate(empty_fleet)
     
-    # function that takes parameter of how many spaces a ship occupies
+    print(playing_field.solution(occupied_fields))
 
-    def place_ship(num):
-        ship = Ship(num).fields
-        ship[0] = select_random_field(available_fields)
-        if num > 1:     
-            index_counter = playing_fields.index(ship[0])
-            dist = select_random_distribution()
-            if dist == "horizontal":
-                if str(num-2) in ship[0] or str(num-3) in ship[0] or str(num-4) in ship[0]:
-                    dir = "right"
-                elif str(num+3) in ship[0] or str(num+4) in ship[0] or str(num+5) in ship[0]:
-                    dir = "left"
-                else:
-                    dir = select_random_left_right()
-                for i in range(num-1):
-                    if dir == "right":
-                        index_counter += 1
-                        ship[i+1] = playing_fields[index_counter]
-                    else:
-                        index_counter -=1
-                        ship[i+1] = playing_fields[index_counter]
-            else:
-                if index_counter < (num-1)*10:
-                    dir = "down"
-                elif index_counter > (len(playing_fields)-1) - (num-1)*10:
-                    dir = "up"
-                else:
-                    dir = select_random_up_down()
-                for i in range(num-1):
-                    if dir == "down":
-                        index_counter += 10
-                        ship[i+1] = playing_fields[index_counter]
-                    else:
-                        index_counter -=10
-                        ship[i+1] = playing_fields[index_counter]
-        return ship
-
-    def remove_from_available_fields(ship):
-        fields_to_be_removed = []
-        for i in range(len(ship)):
-            if ship[i] == "A0":
-                fields_to_be_removed.append(playing_fields.index(ship[i]))
-                fields_to_be_removed.append(playing_fields.index(ship[i])+1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+11)
-            elif ship[i] == "J9":
-                fields_to_be_removed.append(playing_fields.index(ship[i]))
-                fields_to_be_removed.append(playing_fields.index(ship[i])-1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-11)
-            elif "A" in ship[i]:
-                fields_to_be_removed.append(playing_fields.index(ship[i]))
-                fields_to_be_removed.append(playing_fields.index(ship[i])-1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+9)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+11)
-            elif "J" in ship[i]:
-                fields_to_be_removed.append(playing_fields.index(ship[i]))
-                fields_to_be_removed.append(playing_fields.index(ship[i])-1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-9)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-11)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+1)
-            elif "0" in ship[i]:
-                fields_to_be_removed.append(playing_fields.index(ship[i]))
-                fields_to_be_removed.append(playing_fields.index(ship[i])-9)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+11)
-            elif "9" in ship[i]:
-                fields_to_be_removed.append(playing_fields.index(ship[i]))
-                fields_to_be_removed.append(playing_fields.index(ship[i])-1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-11)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+9)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+10)
-            else:
-                fields_to_be_removed.append(playing_fields.index(ship[i]))
-                fields_to_be_removed.append(playing_fields.index(ship[i])-1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-9)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])-11)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+1)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+9)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+10)
-                fields_to_be_removed.append(playing_fields.index(ship[i])+11)
-        list_without_duplicates = []
-        for field in fields_to_be_removed:
-            if field not in list_without_duplicates:
-                list_without_duplicates.append(field)
-        list_without_duplicates.sort(reverse = True)
-        real_content_list = []
-        for index in list_without_duplicates:
-            real_content_list.append(playing_fields[index])
-        real_content_list_filtered = []
-        for element in real_content_list:
-            if element in available_fields:
-                real_content_list_filtered.append(element)
-        index_in_available_fields_list = []
-        for elem in real_content_list_filtered:
-            index_in_available_fields_list.append(available_fields.index(elem))
-        for item in index_in_available_fields_list:
-            available_fields.pop(item)
-
-    # define function to test if ship occupies already occupied fields
-
-    def test_if_occupied(ship):
-        occupied = False
-        for field in ship:
-            if field not in available_fields:
-                occupied = True
-        return occupied
-
-    # populate playing field randomly
-
-    carrier = place_ship(4)
-    occupied_fields += carrier
-    remove_from_available_fields(carrier)
-    battleship_1 = place_ship(3)
-    while test_if_occupied(battleship_1) == True:
-        battleship_1 = place_ship(3)
-    occupied_fields += battleship_1
-    remove_from_available_fields(battleship_1)
-    battleship_2 = place_ship(3)
-    while test_if_occupied(battleship_2) == True:
-        battleship_2 = place_ship(3)
-    occupied_fields += battleship_2
-    remove_from_available_fields(battleship_2)
-    cruiser_1 = place_ship(2)
-    while test_if_occupied(cruiser_1) == True:
-        cruiser_1 = place_ship(2)
-    occupied_fields += cruiser_1
-    remove_from_available_fields(cruiser_1)
-    cruiser_2 = place_ship(2)
-    while test_if_occupied(cruiser_2) == True:
-        cruiser_2 = place_ship(2)
-    occupied_fields += cruiser_2
-    remove_from_available_fields(cruiser_2)
-    cruiser_3 = place_ship(2)
-    while test_if_occupied(cruiser_3) == True:
-        cruiser_3 = place_ship(2)
-    occupied_fields += cruiser_3
-    remove_from_available_fields(cruiser_3)
-    destroyer_1 = place_ship(1)
-    occupied_fields += destroyer_1
-    remove_from_available_fields(destroyer_1)
-    destroyer_2 = place_ship(1)
-    occupied_fields += destroyer_2
-    remove_from_available_fields(destroyer_2)
-    destroyer_3 = place_ship(1)
-    occupied_fields += destroyer_3
-    remove_from_available_fields(destroyer_3)
-    destroyer_4 = place_ship(1)
-    occupied_fields += destroyer_4
-    remove_from_available_fields(destroyer_4)
-
-    all_ships = [[carrier], [battleship_1, battleship_2], [cruiser_1, cruiser_2, cruiser_3], [destroyer_1, destroyer_2, destroyer_3, destroyer_4]]
+    carrier = fleet[0].fields
+    battleship_1 = fleet[1].fields
+    battleship_2 = fleet[2].fields
     battleships = battleship_1 + battleship_2
+    cruiser_1 = fleet[3].fields
+    cruiser_2 = fleet[4].fields
+    cruiser_3 = fleet[5].fields
     cruisers = cruiser_1 + cruiser_2 + cruiser_3
-    destroyers = destroyer_1 + destroyer_2 + destroyer_3 + destroyer_4
+    destroyers = fleet[6].fields + fleet[7].fields + fleet[8].fields + fleet[9].fields
 
-# function to display solved playing field
-
-    def display_solution():
-        playing_field_solution = playing_field.empty
-        for field in playing_fields:
-            playing_field_progress = """"""
-            if field in occupied_fields:
-                playing_field_progress = playing_field_solution.replace(" " + field + " ", "OOOO")
-            else:
-                playing_field_progress = playing_field_solution.replace(" " + field + " ", "~~~~")
-            playing_field_solution = playing_field_progress
-        return playing_field_progress
-
-    print("I have hidden my ships well.\nIf at any point during the game you would like to review the rules, enter '?'.\nOtherwise give me your first target.")
     hit_list = []
     miss_list = []
     total_missiles = 0
     total_hits = 0
-
-    # create function to reprint the playing field with hits and misses marked after each shot
     
-    playing_field_updated = playing_field.empty 
-    def playing_field_update(aim, hit_or_miss):
-        playing_field_progress = """"""
-        if hit_or_miss == "MISS":
-            playing_field_progress = playing_field_updated.replace(" " + aim + " ", "~~~~")
-        elif hit_or_miss == "HIT":
-            playing_field_progress = playing_field_updated.replace(" " + aim + " ", "OOOO")
-        else:
-            playing_field_progress = playing_field_updated
-        return playing_field_progress
-    
-    # create function to detect if a ship has been sunk (start with carrier)
+    print("\nI have hidden my ships well.\nIf at any point during the game you would like to review the rules, enter '?'.\nOtherwise give me your first target.")
 
-    def ship_sunk(aim):
-        if aim in occupied_fields:
-            if aim in destroyers:
-                print("*** SHIP SUNK ***")
-                print("You have sunk one of my destroyers.")
-                if all(field in hit_list for field in destroyers):
-                    print("All destroyers down.")
-            elif aim in carrier:
-                if all(field in hit_list for field in carrier):
-                    print("*** SHIP SUNK ***")
-                    print("You have sunk my carrier.")
-            elif aim in battleship_1:
-                if all(field in hit_list for field in battleship_1):
-                    print("*** SHIP SUNK ***")
-                    print("You have sunk one of my battleships.")
-                    if all(field in hit_list for field in battleships):
-                        print("All battleships down.")
-            elif aim in battleship_2:
-                if all(field in hit_list for field in battleship_2):
-                    print("*** SHIP SUNK ***")
-                    print("You have sunk one of my battleships.")
-                    if all(field in hit_list for field in battleships):
-                        print("All battleships down.")
-            elif aim in cruiser_1:
-                if all(field in hit_list for field in cruiser_1):
-                    print("*** SHIP SUNK ***")
-                    print("You have sunk one of my cruisers.")
-                    if all(field in hit_list for field in cruisers):
-                        print("All cruisers down.")
-            elif aim in cruiser_2:
-                if all(field in hit_list for field in cruiser_2):
-                    print("*** SHIP SUNK ***")
-                    print("You have sunk one of my cruisers.")
-                    if all(field in hit_list for field in cruisers):
-                        print("All cruisers down.")
-            elif aim in cruiser_3:
-                if all(field in hit_list for field in cruiser_3):
-                    print("*** SHIP SUNK ***")
-                    print("You have sunk one of my cruisers.")
-                    if all(field in hit_list for field in cruisers):
-                        print("All cruisers down.")            
     for i in range(75):
-        target = input().upper()
+        target = input("> ").upper()
         outcome = ""
         message = ""
         if target == "?":
@@ -408,15 +273,60 @@ def battleship_game():
             outcome = "MISS"
             miss_list.append(target)
         total_missiles +=1
-        playing_field_updated = playing_field_update(target, outcome)
-        print()
+        print(f"\n*** {outcome} ***")
         if outcome == "HIT":
-            print("*** " + outcome + " ***")
-            ship_sunk(target)
+            if target in destroyers:
+                print("\n*** SHIP SUNK ***")
+                print("You have sunk one of my destroyers.")
+                if all(field in hit_list for field in destroyers):
+                    print("All destroyers down.")
+            elif target in cruiser_1:
+                if all(field in hit_list for field in cruiser_1):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my cruisers.")
+                    if all(field in hit_list for field in cruisers):
+                        print("All cruisers down.")
+            elif target in cruiser_2:
+                if all(field in hit_list for field in cruiser_2):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my cruisers.")
+                    if all(field in hit_list for field in cruisers):
+                        print("All cruisers down.")
+            elif target in cruiser_3:
+                if all(field in hit_list for field in cruiser_3):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my cruisers.")
+                    if all(field in hit_list for field in cruisers):
+                        print("All cruisers down.")
+            elif target in battleship_1:
+                if all(field in hit_list for field in battleship_1):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my battleships.")
+                    if all(field in hit_list for field in battleships):
+                        print("All battleships down.")
+            elif target in battleship_2:
+                if all(field in hit_list for field in battleship_2):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk one of my battleships.")
+                    if all(field in hit_list for field in battleships):
+                        print("All battleships down.")
+            else:
+                if all(field in hit_list for field in carrier):
+                    print("*** SHIP SUNK ***")
+                    print("You have sunk my carrier.")
         else:
-            print("*** " + outcome + " ***")
-            print(message)
-        print(playing_field_updated)
+            print(message)        
+        print(playing_field.update(hit_list, miss_list))
+        print(f"Fleet contains {len(fleet)} ships.")
+        print("Carrier:",carrier)
+        print("Battleship 1:", battleship_1)
+        print("Battleship 2:", battleship_2)
+        print(battleships)
+        print("Cruiser 1:", cruiser_1)
+        print("Cruiser 2:", cruiser_2)
+        print("Cruiser 3:", cruiser_3)
+        print(cruisers)
+        print(destroyers)
 
         if total_hits == 0:
             if total_missiles == 1:
@@ -520,29 +430,27 @@ def battleship_game():
                     print("Give me your next target.")
         else:
             break
+
     if total_hits == 20:
-        print()
-        print("*****   YOU WIN   *****\n\nCongratulations! It took " + str(total_missiles) + " missiles to take all my ships down. \nWell done, " + player1 + "!")
+        print("\n*****   YOU WIN   *****\n\nCongratulations! It took " + str(total_missiles) + " missiles to take all my ships down. \nWell done, " + player1 + "!")
     else:
-        print()
-        print("*****   YOU LOSE   *****\n\nSorry, " + player1 + ". You didn't manage to destroy all my ships with the number of missiles at your disposal.")
+        print("\n*****   YOU LOSE   *****\n\nSorry, " + player1 + ". You didn't manage to destroy all my ships with the number of missiles at your disposal.")
         print("Here is the solution:")
-        print(display_solution())
+        print(playing_field.solution(occupied_fields))
         print("You managed to hit " + str(total_hits) + " targets. Here is the complete list: " + str(hit_list))
 
-battleship_game()
+# define a loop for playing the game again
+
+# bug: doesn't randomly populate after the first round 
 
 def play_again():
-    print()
-    print("Wanna play another round? (y/n)")
-    answer = input().lower()
+    answer = input("\nWanna play another round? (y/n)\n\t> ").lower()
     while answer == "y":
-        print("Ok, " + player1 + ". Here we go.")
+        print(f"Ok, {player1}. Here we go.")
         battleship_game()
-        print()
-        print("Wanna play another round? (y/n)")
-        answer = input().lower()
+        answer = input("\nWanna play another round? (y/n)\n\t> ").lower()
     else:
-        print("It was nice playing with you, " + player1 + "! CU next time.")  
-        
+        print(f"It was nice playing with you, {player1}! CU next time.")  
+
+battleship_game()        
 play_again()
