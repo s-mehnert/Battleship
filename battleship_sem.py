@@ -55,7 +55,7 @@ class Playfield:
         self.columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         self.fields = [self.rows[i] + column for i in range(10) for column in self.columns]
 
-    # bug: doesn't update available fields properly when calling ship.remove()
+    # probably fixed - bug: doesn't update available fields properly when calling ship.remove()
     
     def populate(self, ship_list):
         available_fields = self.fields.copy()
@@ -64,7 +64,6 @@ class Playfield:
             while ship.is_occupied(available_fields):
                 ship.place(self.fields)
             occupied_fields += ship.fields
-            print(occupied_fields)
             ship.remove(available_fields)
             print(available_fields)
             print(len(available_fields))
@@ -137,7 +136,7 @@ class Ship:
     
     # remove the ship from the list of available fields
 
-    # bug: doesn't remove all the fields it should
+    # probably fixed - bug: doesn't remove all the fields it should
 
     def remove(self, from_fields):
         fields_to_be_removed = []
@@ -167,9 +166,8 @@ class Ship:
 
     # check if the fields selected for the ship are already occupied
     def is_occupied(self, available_fields):
-        for field in self.fields:
-            return field not in available_fields
-
+        return any(field not in available_fields for field in self.fields)
+        
     # check if the ship has been sunk
     def is_sunk(self, hit_list):
         return all(field in hit_list for field in self.fields)
@@ -444,11 +442,11 @@ def battleship_game():
 # bug: doesn't randomly populate after the first round 
 
 def play_again():
-    answer = input("\nWanna play another round? (y/n)\n\t> ").lower()
+    answer = input("\nWanna play another round? (y/n)\n> ").lower()
     while answer == "y":
         print(f"Ok, {player1}. Here we go.")
         battleship_game()
-        answer = input("\nWanna play another round? (y/n)\n\t> ").lower()
+        answer = input("\nWanna play another round? (y/n)\n> ").lower()
     else:
         print(f"It was nice playing with you, {player1}! CU next time.")  
 
