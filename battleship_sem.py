@@ -1,4 +1,4 @@
-# create functions to randomly populate playing field
+# Functions to randomly populate playing field
 
 import random
 distribution = ["horizontal", "vertical"]
@@ -16,6 +16,8 @@ def select_random_left_right():
 # Playing field class
 
 class Playfield:
+
+    # Create an instance of a playing field
     def __init__(self):
         self.empty = """
          ____ ____ ____ ____ ____ ____ ____ ____ ____ ____
@@ -54,9 +56,8 @@ class Playfield:
         self.rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         self.columns = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         self.fields = [self.rows[i] + column for i in range(10) for column in self.columns]
-
-    # probably fixed - bug: doesn't update available fields properly when calling ship.remove()
     
+    # Populate the playing fiels: returns a list of occupied fields as well as a list containing all the placed ships
     def populate(self, ship_list):
         available_fields = self.fields.copy()
         occupied_fields = []
@@ -67,9 +68,7 @@ class Playfield:
             ship.remove(available_fields)
         return occupied_fields, ship_list
     
-    def wipe(self):
-        return Playfield()
-    
+    # Update the appearance (output to the terminal) of the playing field after each player move
     def update(self, hit_list, miss_list):
         update = self.empty
         for field in hit_list:
@@ -78,6 +77,7 @@ class Playfield:
             update = update.replace(" " + field + " ", "~~~~")
         return update
 
+    # Update the appearance of the playing field to show where the ships are located
     def solution(self, occupied_fields):
         solution = self.empty
         for field in self.fields:
@@ -91,14 +91,14 @@ class Playfield:
 # Ship class
 class Ship:
     
-    # create an instance of a ship in the form of a list containing the pre-defined number of fields
+    # Create an instance of a ship in the form of a list containing the pre-defined number of fields
     def __init__(self, size):
         self.size = size
         self.fields = []
         for i in range(size):
             self.fields.append("")
     
-    # place the ship on the playing field randomly
+    # Place the ship on the playing field randomly
     def place(self, playing_fields):
         self.playing_fields = playing_fields
         self.fields[0] = select_random_field(playing_fields)
@@ -135,10 +135,7 @@ class Ship:
                         self.fields[i+1] = playing_fields[index_counter]
         return self.fields
     
-    # remove the ship from the list of available fields
-
-    # probably fixed - bug: doesn't remove all the fields it should
-
+    # Remove the fields occupied by the ship and surrounded no longer choosable fields from the list of available fields
     def remove(self, from_fields):
         fields_to_be_removed = []
         available_fields = Playfield().fields
@@ -163,17 +160,9 @@ class Ship:
                 from_fields.pop(from_fields.index(field))
         return from_fields
 
-    # check if the fields selected for the ship are already occupied
+    # Check if the fields selected for the ship are already occupied
     def is_occupied(self, available_fields):
         return any(field not in available_fields for field in self.fields)
-        
-    # check if the ship has been sunk
-    def is_sunk(self, hit_list):
-        return all(field in hit_list for field in self.fields)
-
-# Setting up playing field and other global parameters
-
-
 
 # Intro
 
@@ -209,8 +198,8 @@ else:
 # Game
 
 def battleship_game():
-    input("\nPress ENTER so that I can set up our playing field.")
-    print("\nLet the battle begin!\n")
+    
+    # Set up playing field and create empty fleet of ships
 
     playing_field = Playfield()
     playing_fields = playing_field.fields
@@ -228,9 +217,9 @@ def battleship_game():
 
     empty_fleet = [car, bat_1, bat_2, cru_1, cru_2, cru_3, des_1, des_2, des_3, des_4]
 
+    # Populate playing field and determine position of ships
+
     occupied_fields, fleet = playing_field.populate(empty_fleet)
-    
-    print(playing_field.empty)
 
     carrier = fleet[0].fields
     battleship_1 = fleet[1].fields
@@ -247,8 +236,15 @@ def battleship_game():
     total_missiles = 0
     total_hits = 0
     
+    # Main body of the game
+
+    input("\nPress ENTER so that I can set up our playing field.")
+    print("\nLet the battle begin!\n")
+    print(playing_field.empty)
     print("\nI have hidden my ships well.\nIf at any point during the game you would like to review the rules, enter '?'.\nOtherwise give me your first target.")
 
+    # Get player input, check it against game conditionals and give appropriate feedback to player
+    
     for i in range(75):
         target = input("> ").upper()
         outcome = ""
@@ -321,10 +317,12 @@ def battleship_game():
                 print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles didn't hit my ships.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             elif total_missiles == 74:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
                 print("So far your missiles didn't hit my ships.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             else:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles didn't hit my ships.")
@@ -338,10 +336,12 @@ def battleship_game():
                 print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships once.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             elif total_missiles == 74:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships once.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             else:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships once.")
@@ -355,10 +355,12 @@ def battleship_game():
                 print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships twice.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             elif total_missiles == 74:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships twice.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             else:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships twice.")
@@ -372,10 +374,12 @@ def battleship_game():
                 print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hit needed to win this battle.\n")
+                print("Give me your next target.")
             elif total_missiles == 74:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hit needed to win this battle.\n")
+                print("Give me your next target.")
             else:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
@@ -389,10 +393,12 @@ def battleship_game():
                 print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             elif total_missiles == 74:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
+                print("Give me your next target.")
             else:
                 print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
@@ -412,7 +418,8 @@ def battleship_game():
         print(playing_field.solution(occupied_fields))
         print("You managed to hit " + str(total_hits) + " targets. Here is the complete list: " + str(hit_list))
     
-    # define a loop for playing the game again
+    # Define a loop for playing the game again
+    
     answer = input("\nWanna play another round? (y/n)\n> ").lower()
     if answer == "y":
         print(f"Ok, {player1}. Here we go.")
