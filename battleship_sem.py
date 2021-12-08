@@ -197,7 +197,7 @@ else:
         
 # Game
 
-def battleship_game():
+def battleship_game(play_count=0, won_count=0, lost_count=0):
     
     # Set up playing field and create empty fleet of ships
 
@@ -411,19 +411,23 @@ def battleship_game():
             break
 
     if total_hits == 20:
+        won_count += 1
         print("\n*****   YOU WIN   *****\n\nCongratulations! It took " + str(total_missiles) + " missiles to take all my ships down. \nWell done, " + player1 + "!")
     else:
+        lost_count +=1
         print("\n*****   YOU LOSE   *****\n\nSorry, " + player1 + ". You didn't manage to destroy all my ships with the number of missiles at your disposal.")
         print("Here is the solution:")
         print(playing_field.solution(occupied_fields))
         print("You managed to hit " + str(total_hits) + " targets. Here is the complete list: " + str(hit_list))
+    play_count += 1
+    print(f"\nGames played: {play_count}\nGames won: {won_count}\nGames lost: {lost_count}")
     
     # Define a loop for playing the game again
     
     answer = input("\nWanna play another round? (y/n)\n> ").lower()
     if answer == "y":
         print(f"Ok, {player1}. Here we go.")
-        battleship_game()
+        battleship_game(play_count, won_count, lost_count)
     else:
         print(f"It was nice playing with you, {player1}! CU next time.")  
 
