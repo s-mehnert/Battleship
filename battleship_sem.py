@@ -238,6 +238,21 @@ def battleship_game(play_count=0, won_count=0, lost_count=0):
     
     # Main body of the game
 
+    difficulty_levels = ["1", "2", "3", "4"]
+    selection = input("\nLet's see. How difficult shall I make it for you?\nEasy (1), Medium (2), Hard (3) or Extreme (4)?\n> ")
+    while selection not in difficulty_levels:
+        selection = input("\nWho's supposed to decipher that??? Please, type 1 for Easy, 2 for Medium, 3 for Hard or 4 for Extreme.\n> ")
+    else:
+        difficulty = int(selection)
+    if difficulty == 1:
+        print(f"\nWise decision, {player1}. Take it slow in the beginning.")
+    if difficulty == 2:
+        print(f"\nMedium, ey, {player1}? Let's see if your skills are a match for me.")
+    if difficulty == 3:
+        print(f"\nI wanna see you try, {player1}!")
+    if difficulty == 4:
+        print(f"\nHahaha! You stand no chance, {player1}!")
+
     input("\nPress ENTER so that I can set up our playing field.")
     print("\nLet the battle begin!\n")
     print(playing_field.empty)
