@@ -182,7 +182,7 @@ The ships can be distributed horizontally or vertically, but not diagonally.
 None of the ships touches another (not even diagonally).
 The ships contain 1 carrier (4 fields), 2 battleships (3 fields), 3 carriers (2 fields) and 4 destroyers (1 field).
 I will let you know, once you have sunk a particular ship.
-You will have 75 missiles in total. If you manage to sink all my ships, YOU WIN.
+Depending on the difficulty level you will have 80, 70, 60 or 50 missiles in total. If you manage to sink all my ships, YOU WIN.
 Else, I WIN.
 """
 
@@ -191,7 +191,7 @@ while answer_rules != "y" and answer_rules != "n":
     answer_rules = input("\nCome again? Please enter y for yes or n for no.\n> ").lower()
 else:
     if answer_rules == "y":
-        print("\nLooks like we are good to go.\n")    
+        print("\nLooks like we are good to go.")    
     else:
         print(rules)
         
@@ -235,6 +235,7 @@ def battleship_game(play_count=0, won_count=0, lost_count=0):
     miss_list = []
     total_missiles = 0
     total_hits = 0
+    num_missiles = 0
     
     # Main body of the game
 
@@ -246,12 +247,16 @@ def battleship_game(play_count=0, won_count=0, lost_count=0):
         difficulty = int(selection)
     if difficulty == 1:
         print(f"\nWise decision, {player1}. Take it slow in the beginning.")
+        num_missiles = 80
     if difficulty == 2:
         print(f"\nMedium, ey, {player1}? Let's see if your skills are a match for me.")
+        num_missiles = 70
     if difficulty == 3:
         print(f"\nI wanna see you try, {player1}!")
+        num_missiles = 60
     if difficulty == 4:
         print(f"\nHahaha! You stand no chance, {player1}!")
+        num_missiles = 50
 
     input("\nPress ENTER so that I can set up our playing field.")
     print("\nLet the battle begin!\n")
@@ -260,7 +265,7 @@ def battleship_game(play_count=0, won_count=0, lost_count=0):
 
     # Get player input, check it against game conditionals and give appropriate feedback to player
     
-    for i in range(75):
+    for i in range(num_missiles):
         target = input("> ").upper()
         outcome = ""
         message = ""
@@ -329,96 +334,96 @@ def battleship_game(play_count=0, won_count=0, lost_count=0):
 
         if total_hits == 0:
             if total_missiles == 1:
-                print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missile, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles didn't hit my ships.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
-            elif total_missiles == 74:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
+            elif total_missiles == num_missiles-1:
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missile left.")
                 print("So far your missiles didn't hit my ships.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
             else:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles didn't hit my ships.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
-                if total_missiles == 75:
+                if total_missiles == num_missiles:
                     continue
                 else:
                     print("Give me your next target.")
         elif total_hits == 1:
             if total_missiles == 1:
-                print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missile, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships once.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
-            elif total_missiles == 74:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
+            elif total_missiles == num_missiles-1:
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships once.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
             else:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships once.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
-                if total_missiles == 75:
+                if total_missiles == num_missiles:
                     continue
                 else:
                     print("Give me your next target.")
         elif total_hits == 2:
             if total_missiles == 1:
-                print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missile, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships twice.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
-            elif total_missiles == 74:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
+            elif total_missiles == num_missiles-1:
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships twice.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
             else:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships twice.")
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
-                if total_missiles == 75:
+                if total_missiles == num_missiles:
                     continue
                 else:
                     print("Give me your next target.")
         elif total_hits == 19:
             if total_missiles == 1:
-                print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missile, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hit needed to win this battle.\n")
                 print("Give me your next target.")
-            elif total_missiles == 74:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
+            elif total_missiles == num_missiles-1:
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hit needed to win this battle.\n")
                 print("Give me your next target.")
             else:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hit needed to win this battle.\n")
-                if total_missiles == 75:
+                if total_missiles == num_missiles:
                     continue
                 else:
                     print("Give me your next target.")
         elif total_hits < 20:
             if total_missiles == 1:
-                print("You have launched " + str(total_missiles) + " missile, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missile, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
-            elif total_missiles == 74:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missile left.")
+            elif total_missiles == num_missiles-1:
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missile left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
                 print("Give me your next target.")
             else:
-                print("You have launched " + str(total_missiles) + " missiles, " + str(75-total_missiles) + " missiles left.")
+                print("You have launched " + str(total_missiles) + " missiles, " + str(num_missiles-total_missiles) + " missiles left.")
                 print("So far your missiles hit my ships " + str(total_hits) + " times: " + str(hit_list))
                 print(str(len(occupied_fields)-total_hits) + " more hits needed to win this battle.\n")
-                if total_missiles == 75:
+                if total_missiles == num_missiles:
                     continue
                 else:
                     print("Give me your next target.")
