@@ -22,6 +22,9 @@ The Ultimate Battleship Experience
 
 --- Battleship Terminal Game (1 player mode) ---
 
+New in version 2.0:
+The program now gives the choice of 4 difficulty levels and keeps a running total of games played, games won and games lost.
+
 Rules: 
 The programm will hide 10 ships. Together they occupy a total of 20 fields.
 The ships can be distributed horizontally or vertically, but not diagonally.
