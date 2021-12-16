@@ -108,7 +108,7 @@ class Ship:
             if dist == "horizontal":
                 if str(self.size-2) in self.fields[0] or str(self.size-3) in self.fields[0] or str(self.size-4) in self.fields[0]:
                     dir = "right"
-                elif str(self.size+3) in self.fields[0] or str(self.size+4) in self.fields[0] or str(self.size+5) in self.fields[0]:
+                elif str(11-self.size) in self.fields[0] or str(12-self.size) in self.fields[0] or str(13-self.size) in self.fields[0]:
                     dir = "left"
                 else:
                     dir = select_random_left_right()
