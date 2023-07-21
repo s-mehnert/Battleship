@@ -12,6 +12,8 @@ def select_random_up_down():
     return random.choice(up_down)
 def select_random_left_right():
     return random.choice(left_right)
+def select_random_left_deleteme():
+    return random.choice(left_right)
 
 # Playing field class
 
